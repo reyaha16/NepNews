@@ -1,0 +1,87 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NepNews - Your Source, Your Story</title>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="nav-container">
+            <div class="menu">
+                <img src="{% static 'images/menu.png' %}" alt="Menu" class="menu-icon" onclick="toggleSidebar()">
+            </div>
+            <nav class="navbar">
+                <ul>
+                    <li><a href="{% url 'home-page' %}">Home</a></li>
+                    {% for category in categories %}
+                    <li><a href="{% url 'category-post' category.id %}">{{ category.name }}</a></li>
+                    {% endfor %}
+                </ul>
+            </nav>
+            <div class="right-icons">
+                <div class="search-container">
+                    <form action="{% url 'search-posts' %}" method="get">
+                        <input type="text" name="q" class="search-input" placeholder="Search news..." value="{{ query|default_if_none:'' }}">
+                        <button type="submit" class="search-button">
+                            <img src="{% static 'images/search.png' %}" alt="Search" class="search-icon">
+                        </button>
+                    </form>
+                </div>
+                {% if user.is_authenticated %}
+                    <a href="{% url 'profile-page' %}"><img class="user" src="{% static 'images/user.png' %}" alt="User Profile"></a>
+                {% else %}
+                    <img class="user" src="{% static 'images/user.png' %}" alt="User Profile" id="user-icon" onclick="openAuthModal()">
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <div class="time-container">
+        <span id="nepal-time">Nepal Time: Loading...</span>
+    </div>
+
+    <div class="sidebar">
+        <button class="close-btn" onclick="toggleSidebar()"><img class="close" src="{% static 'images/close.png' %}" alt="Close button"></button>
+        <ul>
+            <li><a href="{% url 'home-page' %}">Home</a></li>
+            {% for category in categories %}
+            <li><a href="{% url 'category-post' category.id %}">{{ category.name }}</a></li>
+            {% endfor %}
+            {% if user.is_authenticated %}
+                <li><a href="{% url 'logout' %}">Logout</a></li>
+                {% if user.userprofile.role == 'writer' %}
+                    <li><a href="{% url 'new-post' %}">New Post</a></li>
+                {% elif user.userprofile.role == 'editor' %}
+                    <li><a href="{% url 'post-approval' %}">Post Approval</a></li>
+                {% endif %}
+            {% else %}
+                <li><a href="{% url 'signup' %}">Sign Up</a></li>
+                <li><a href="{% url 'login-user' %}">Login</a></li>
+            {% endif %}
+        </ul>
+    </div>
+
+    {% block content %}
+    {% endblock %}
+
+    <footer>
+        <p>© 2025 NepNews. All rights reserved.</p>
+        <ul>
+            <li><a href="/about">About Us</a></li>
+            <li><a href="/contact">Contact</a></li>
+            <li><a href="/privacy-policy">Privacy Policy</a></li>
+            <li><a href="/terms">Terms of Service</a></li>
+        </ul>
+        <div>
+            <a href="https://www.facebook.com">Facebook</a>
+            <a href="https://www.instagram.com">Instagram</a>
+        </div>
+        <p>Contact Us: <a href="mailto:contact@nepnews.com">contact@nepnews.com</a></p>
+    </footer>
+
+    <script src="{% static 'js/scripts.js' %}"></script>
+</body>
+</html>
