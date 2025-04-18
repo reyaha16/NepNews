@@ -17,11 +17,26 @@ header {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+<<<<<<< HEAD
+    overflow: hidden;
+    transition: top 0.3s ease-in-out;
+    position: relative; /* Default position */
+    z-index: 999;
+}
+
+/* Sticky header when user scrolls */
+header.sticky {
+    position: fixed;
+    top:0;
+    left: 0;
+}
+=======
    
     overflow: hidden;
 }
 
 
+>>>>>>> origin/main
 .nav-container {
     width: 100%;
     display: flex;
@@ -42,6 +57,11 @@ header {
     filter: invert(1);
 }
 
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> origin/main
 .navbar ul {
     list-style: none;
     padding: 0;
@@ -70,7 +90,11 @@ header {
     font-weight: bold;
     border-radius: 5px;
 }
+<<<<<<< HEAD
+/*  Right-side Icons  */
+=======
 
+>>>>>>> origin/main
 .right-icons {
     display: flex;
     justify-content: space-between;
@@ -86,6 +110,10 @@ header {
     justify-content: space-evenly;
 }
 
+<<<<<<< HEAD
+/* White filter for user icon */
+=======
+>>>>>>> origin/main
 .user{
     filter: brightness(0) invert();
 }
@@ -123,17 +151,30 @@ header {
     visibility: visible;
 }
 
+<<<<<<< HEAD
+/* Expand search field on hover (to the left) */
+.search-container:hover {
+    width: 200px; /* Expand width */
+=======
 .search-container:hover {
     width: 200px; 
+>>>>>>> origin/main
 }
 
 .search-container:hover .search-input {
     width: 160px;
     opacity: 1;
+<<<<<<< HEAD
+    margin-left: 5px; /* Push input to the left */
+}
+
+/* Logo Section */
+=======
     margin-left: 5px; 
 }
 
 
+>>>>>>> origin/main
 .logo {
     height: 100px;
     display: flex;
@@ -146,6 +187,10 @@ header {
     width: 300px;
 }
 
+<<<<<<< HEAD
+/* News Section Grid */
+=======
+>>>>>>> origin/main
 .news-container {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
@@ -167,12 +212,20 @@ header {
     padding: 20px;
 }
 
+<<<<<<< HEAD
+/* Featured large news item */
+=======
+>>>>>>> origin/main
 .news-item.large {
     grid-column: 2;
     grid-row: span 2;
     height: 300px;
 }
 
+<<<<<<< HEAD
+/* Standard small news item */
+=======
+>>>>>>> origin/main
 .news-item.small {
     height: 150px;
 }
@@ -194,6 +247,10 @@ header {
     padding-top: 50px;
 }
 
+<<<<<<< HEAD
+/* Show sidebar when active */
+=======
+>>>>>>> origin/main
 .sidebar.active {
     transform: translateX(0); 
 }
@@ -229,7 +286,10 @@ header {
     background: none;
     border: none;
     cursor: pointer;
+<<<<<<< HEAD
+=======
     width: 50px;
+>>>>>>> origin/main
 }
 
 .close-btn img {
@@ -253,6 +313,8 @@ header {
     background-color: white;
 }
 
+<<<<<<< HEAD
+=======
 /* Modal Styling */
 .modal {
     position: fixed;
@@ -445,3 +507,4 @@ button:hover {
 
 
 
+>>>>>>> origin/main

@@ -1,9 +1,26 @@
+<<<<<<< HEAD
+// Toggles the sidebar open/close state by toggling the "active" class
+=======
+>>>>>>> origin/main
 function toggleSidebar() {
     let sidebar = document.querySelector(".sidebar");
     sidebar.classList.toggle("active");
 }
 
+<<<<<<< HEAD
+// Adds a "sticky" class to the header when scrolling down
+window.addEventListener('scroll', function() {
+    const header = document.querySelector('header');
+    if (window.scrollY > 0) {
+      header.classList.add('sticky');
+    } else {
+      header.classList.remove('sticky');
+    }
+  });
+// Highlights the current page link in the navbar
+=======
 
+>>>>>>> origin/main
 document.addEventListener("DOMContentLoaded", function () {
     let currentLocation = window.location.pathname.split("/").pop() || "index.html"; // Default to home page
     let navLinks = document.querySelectorAll(".navbar a");
@@ -14,6 +31,8 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 });
+<<<<<<< HEAD
+=======
 
 document.addEventListener("DOMContentLoaded", function () {
     const userIcon = document.querySelector(".user");
@@ -132,3 +151,4 @@ function searchNews() {
 
 // Event listener for the search input
 document.querySelector('.search-input').addEventListener('input', searchNews);
+>>>>>>> origin/main
