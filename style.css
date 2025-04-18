@@ -17,6 +17,7 @@ header {
     display: flex;
     justify-content: space-evenly;
     align-items: center;
+<<<<<<< HEAD
     overflow: hidden;
     transition: top 0.3s ease-in-out;
     position: relative; /* Default position */
@@ -29,6 +30,13 @@ header.sticky {
     top:0;
     left: 0;
 }
+=======
+   
+    overflow: hidden;
+}
+
+
+>>>>>>> origin/main
 .nav-container {
     width: 100%;
     display: flex;
@@ -49,8 +57,11 @@ header.sticky {
     filter: invert(1);
 }
 
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> origin/main
 .navbar ul {
     list-style: none;
     padding: 0;
@@ -79,7 +90,11 @@ header.sticky {
     font-weight: bold;
     border-radius: 5px;
 }
+<<<<<<< HEAD
 /*  Right-side Icons  */
+=======
+
+>>>>>>> origin/main
 .right-icons {
     display: flex;
     justify-content: space-between;
@@ -95,7 +110,10 @@ header.sticky {
     justify-content: space-evenly;
 }
 
+<<<<<<< HEAD
 /* White filter for user icon */
+=======
+>>>>>>> origin/main
 .user{
     filter: brightness(0) invert();
 }
@@ -133,18 +151,30 @@ header.sticky {
     visibility: visible;
 }
 
+<<<<<<< HEAD
 /* Expand search field on hover (to the left) */
 .search-container:hover {
     width: 200px; /* Expand width */
+=======
+.search-container:hover {
+    width: 200px; 
+>>>>>>> origin/main
 }
 
 .search-container:hover .search-input {
     width: 160px;
     opacity: 1;
+<<<<<<< HEAD
     margin-left: 5px; /* Push input to the left */
 }
 
 /* Logo Section */
+=======
+    margin-left: 5px; 
+}
+
+
+>>>>>>> origin/main
 .logo {
     height: 100px;
     display: flex;
@@ -157,7 +187,10 @@ header.sticky {
     width: 300px;
 }
 
+<<<<<<< HEAD
 /* News Section Grid */
+=======
+>>>>>>> origin/main
 .news-container {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
@@ -179,14 +212,20 @@ header.sticky {
     padding: 20px;
 }
 
+<<<<<<< HEAD
 /* Featured large news item */
+=======
+>>>>>>> origin/main
 .news-item.large {
     grid-column: 2;
     grid-row: span 2;
     height: 300px;
 }
 
+<<<<<<< HEAD
 /* Standard small news item */
+=======
+>>>>>>> origin/main
 .news-item.small {
     height: 150px;
 }
@@ -208,7 +247,10 @@ header.sticky {
     padding-top: 50px;
 }
 
+<<<<<<< HEAD
 /* Show sidebar when active */
+=======
+>>>>>>> origin/main
 .sidebar.active {
     transform: translateX(0); 
 }
@@ -244,6 +286,10 @@ header.sticky {
     background: none;
     border: none;
     cursor: pointer;
+<<<<<<< HEAD
+=======
+    width: 50px;
+>>>>>>> origin/main
 }
 
 .close-btn img {
@@ -267,3 +313,198 @@ header.sticky {
     background-color: white;
 }
 
+<<<<<<< HEAD
+=======
+/* Modal Styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 300px;
+    text-align: center;
+    position: relative;
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    font-size: 14px;
+}
+
+input {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+p {
+    margin-top: 15px;
+    font-size: 14px;
+}
+
+.hidden {
+    display: none;
+}
+
+#close-modal {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+footer {
+    background-color:black;
+    color: white;
+    text-align: center;
+    padding: 5px;
+}
+
+footer ul {
+    list-style-type: none;
+    padding: 0;
+}
+
+footer ul li {
+    display: inline;
+    margin: 0 15px;
+}
+
+footer a {
+    color: white;
+    text-decoration: none;
+    padding: 5px;
+}
+
+footer a:hover {
+    text-decoration: underline;
+}
+
+
+/* Modal Styling */
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Modal Content Box */
+.container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    width: 320px;
+    text-align: center;
+    position: relative;
+}
+
+h2 {
+    margin-bottom: 15px;
+}
+
+label {
+    display: block;
+    text-align: left;
+    margin: 10px 0 5px;
+    font-size: 14px;
+}
+
+input {
+    width: calc(100% - 16px);
+    padding: 8px 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+button {
+    width: 100%;
+    padding: 10px;
+    background-color:white;
+    border: none;
+    color: black;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: grey;
+}
+
+/* Close Modal Button */
+#close-modal, #close-forgot-password {
+    position: absolute;
+    top: 10px;
+    right: 15px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+/* Hidden Class */
+.hidden {
+    display: none;
+}
+
+.logout-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    background: linear-gradient(to bottom, #4A4A4A, #000);
+    padding: 0;
+}
+
+.logout-button {
+    width: 100%;
+    padding: 15px;
+    border: none;
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+    font-size: 16px;
+    text-decoration: none;
+    display: flex; /* Make it behave like other menu items */
+    align-items: center; /* Align text properly */
+    text-align: left;
+    border-radius: 0;
+    cursor: pointer;
+}
+
+.logout-button:hover {
+    background: rgba(255, 255, 255, 0.2);
+}
+
+
+
+
+
+>>>>>>> origin/main
