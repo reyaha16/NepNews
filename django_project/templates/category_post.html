@@ -1,0 +1,17 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ category.name }}</h2>
+<div class="news-container">
+    {% for post in posts %}
+    <div class="news-item small">
+        <a href="{% url 'view-post' post.id %}">
+            {% if post.banner_path %}
+                <img src="{{ post.banner_path.url }}" alt="{{ post.title }}">
+            {% endif %}
+            <h4>{{ post.title }}</h4>
+            <p>{{ post.short_description|truncatewords:10 }}</p>
+        </a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
