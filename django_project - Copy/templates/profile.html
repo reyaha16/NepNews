@@ -1,0 +1,21 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 800px; margin: 80px auto 20px; padding: 20px;">
+    <h2>Your Profile</h2>
+    {% if user.userprofile.profile_pic %}
+        <img src="{{ user.userprofile.profile_pic.url }}" alt="Profile Picture" style="width: 100px; height: auto; border-radius: 50%;">
+    {% endif %}
+    <p><strong>Username:</strong> {{ user.username }}</p>
+    <p><strong>Email:</strong> {{ user.email }}</p>
+    <p><strong>Role:</strong> {{ user.userprofile.get_role_display }}</p>
+    {% if user.userprofile.bio %}
+        <p><strong>Bio:</strong> {{ user.userprofile.bio }}</p>
+    {% endif %}
+    {% if user.userprofile.role == 'writer' %}
+        <h3>Your Posts</h3>
+        {% for post in user.post_set.all %}
+            <p>{{ post.title }} - {{ post.status }}</p>
+        {% endfor %}
+    {% endif %}
+</div>
+{% endblock %}
