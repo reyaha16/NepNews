@@ -3,7 +3,7 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .models import Post, Category, UserProfile
+from .models import Post, Category, UserProfile, Like, Bookmark, Comment
 from django.db.models import Q
 from django.core.mail import send_mail
 from django.conf import settings
@@ -11,6 +11,9 @@ from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
 from django.utils.encoding import force_bytes, force_str
 from django.urls import reverse
+from django.http import JsonResponse
+
+
 
 def role_required(*roles):
     def decorator(view_func):
@@ -131,12 +134,12 @@ def category_post(request, id):
     categories = Category.objects.all()
     return render(request, 'category_post.html', {'category': category, 'posts': posts, 'categories': categories})
 
-def view_post(request, id):
-    post = get_object_or_404(Post, id=id, status='published')
-    post.views += 1
-    post.save()
-    categories = Category.objects.all()
-    return render(request, 'view-post.html', {'post': post, 'categories': categories})
+# def view_post(request, id):
+#     post = get_object_or_404(Post, id=id, status='published')
+#     post.views += 1
+#     post.save()
+#     categories = Category.objects.all()
+#     return render(request, 'view-post.html', {'post': post, 'categories': categories})
 
 @login_required
 @role_required('writer', 'editor', 'admin')
@@ -176,7 +179,7 @@ def post_approval(request):
 @login_required
 def profile_page(request):
     categories = Category.objects.all()
-    return render(request, 'profile.html', {'user': request.user, 'categories': categories})
+    return render(request, 'profile.html', {'user': request.user, 'categories': categories,})
 
 def search_posts(request):
     if request.method == 'GET':
@@ -203,3 +206,58 @@ def search_posts(request):
         
         return render(request, 'search-post.html', context)
     return redirect('home-page')
+
+def view_post(request, id):
+    post = get_object_or_404(Post, id=id)
+    
+    if post.status != 'published':
+        if not request.user.is_authenticated or (
+            request.user != post.author and 
+            request.user.userprofile.role not in ['editor', 'admin']
+        ):
+            return render(request, '404.html', status=404)
+    
+    post.views += 1
+    post.save()
+    
+    comments = post.comments.all()
+    
+    return render(request, 'view-post.html', {'post': post, 'comments': comments})
+
+@login_required
+def like_post(request, post_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    post = get_object_or_404(Post, id=post_id)
+    like, created = Like.objects.get_or_create(user=request.user, post=post)
+    if not created:
+        like.delete()
+        liked = False
+    else:
+        liked = True
+    return JsonResponse({'liked': liked, 'like_count': post.likes.count()})
+
+@login_required
+def bookmark_post(request, post_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+    
+    post = get_object_or_404(Post, id=post_id)
+    bookmark, created = Bookmark.objects.get_or_create(user=request.user, post=post)
+    if not created:
+        bookmark.delete()
+        bookmarked = False
+    else:
+        bookmarked = True
+    return JsonResponse({'bookmarked': bookmarked})
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            Comment.objects.create(user=request.user, post=post, content=content)
+            return redirect('view-post', id=post_id)
+    return redirect('view-post', id=post_id)
