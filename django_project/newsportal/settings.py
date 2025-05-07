@@ -3,9 +3,11 @@ from pathlib import Path
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = 'django-insecure-=^1muaqy054v^nnv5503!i&7i-_fc0%^195(su3+ie-omdmtdz'
+SECRET_KEY = 'django-insecure-=^1muaqy054v^nnv5503!i&7i-_fc0%^195(su3+ie-omdmtdz'  # Replace with a secure key
 
 DEBUG = True
+
+LOGIN_URL = '/login/'   
 
 ALLOWED_HOSTS = []
 
@@ -87,16 +89,3 @@ MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
-
-# Email settings for development (prints emails to console)
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-EMAIL_HOST_USER = 'noreply@nepnews.com'
-
-# For production, use SMTP (example with Gmail)
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_PORT = 587
-EMAIL_USE_TLS = True
-EMAIL_HOST_USER = 'prashannachauhankshetri@gmail.com'
-EMAIL_HOST_PASSWORD = 'alyn aegm mlsr djtq'  # Use an App Password if using Gmail
-DEFAULT_FROM_EMAIL = 'prashannachauhankshetri@gmail.com'

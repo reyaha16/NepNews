@@ -5,6 +5,10 @@ from django.contrib.auth.models import User
 from django.contrib import messages
 from .models import Post, Category, UserProfile
 from django.db.models import Q
+from .models import Advertisement
+from django.shortcuts import get_object_or_404, redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from .forms import AdvertisementForm
 
 def role_required(*roles):
     def decorator(view_func):
@@ -17,6 +21,17 @@ def role_required(*roles):
 
 def home_page(request):
     posts = Post.objects.filter(status='published').order_by('-created_at')
+
+    ads = Advertisement.objects.all()
+    context = {
+        'posts': posts,
+        'ads_top': ads.filter(position='top'),
+        'ads_sidebar': ads.filter(position='sidebar'),
+        'ads_bottom': ads.filter(position='bottom'),
+        'ads_front': ads.filter(position='front'),
+    }
+
+    return render(request, 'index.html', context)
     return render(request, 'index.html', {'posts': posts})
 
 def login_user(request):
@@ -162,3 +177,53 @@ def search_posts(request):
         return render(request, 'search-post.html', context)
     return redirect('home-page')
 
+def is_ads_manager(user):
+    return hasattr(user, 'userprofile') and user.userprofile.role == 'ads_manager'
+
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == 'ads_manager')
+def list_advertisements(request):
+    position = request.GET.get('position')
+    ads = Advertisement.objects.all()
+    if position:
+        ads = ads.filter(position=position)
+
+    positions = ['top', 'sidebar', 'bottom', 'front']
+    return render(request, 'ads/list_ads.html', {
+        'ads': ads,
+        'positions': positions,
+        'selected_position': position
+    })
+
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == 'ads_manager')
+def create_advertisement(request):
+    if request.method == 'POST':
+        form = AdvertisementForm(request.POST, request.FILES)
+        if form.is_valid():
+            form.save()
+            return redirect('list_ads')
+    else:
+        form = AdvertisementForm()
+    return render(request, 'ads/create_ad.html', {'form': form, 'action': 'Create'})
+
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == 'ads_manager')
+def edit_advertisement(request, ad_id):
+    ad = get_object_or_404(Advertisement, id=ad_id)
+    if request.method == 'POST':
+        form = AdvertisementForm(request.POST, request.FILES, instance=ad)
+        if form.is_valid():
+            form.save()
+            return redirect('list_ads')
+    else:
+        form = AdvertisementForm(instance=ad)
+    return render(request, 'ads/edit_ad.html', {'form': form, 'action': 'Edit'})
+
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == 'ads_manager')
+def delete_advertisement(request, ad_id):
+    ad = get_object_or_404(Advertisement, id=ad_id)
+    if request.method == 'POST':
+        ad.delete()
+    return redirect('list_ads')

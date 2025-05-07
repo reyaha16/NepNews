@@ -12,6 +12,15 @@
         <img src="{% static 'images/NepNewsLogo.png' %}" alt="NepNews Logo">
     </div>
 
+    {% if ads_front %}
+        <div class="ad-section ad-front">
+            {% for ad in ads_front %}
+            <a href="{{ ad.url }}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}"></a>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+
     <div class="news-container">
         {% for post in posts %}
         <div class="news-item small">

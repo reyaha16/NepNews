@@ -7,9 +7,10 @@ class UserProfile(models.Model):
         ('writer', 'Writer'),
         ('editor', 'Editor'),
         ('admin', 'Admin'),
+        ('ads_manager', 'Ads Manager'),
     )
     user = models.OneToOneField(User, on_delete=models.CASCADE)
-    role = models.CharField(max_length=10, choices=ROLE_CHOICES, default='user')
+    role = models.CharField(max_length=15, choices=ROLE_CHOICES, default='user')
     bio = models.TextField(blank=True, null=True)
     profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
 
@@ -25,6 +26,7 @@ class Category(models.Model):
     
     class Meta:
         verbose_name_plural = "Categories"
+        
 
 class Post(models.Model):
     STATUS_CHOICES = (
@@ -44,5 +46,34 @@ class Post(models.Model):
     status = models.CharField(max_length=15, choices=STATUS_CHOICES, default='draft')
     views = models.IntegerField(default=0)
     
+    def __str__(self):
+        return self.title
+    
+
+class Advertisement(models.Model):
+    POSITION_CHOICES = [
+        ('top', 'Top'),
+        ('sidebar', 'Sidebar'),
+        ('bottom', 'Bottom'),
+        ('front', 'Front Page'),
+    ]
+
+    STATUS_CHOICES = [
+        ('pending', 'Pending'),
+        ('approved', 'Approved'),
+        ('rejected', 'Rejected'),
+    ]
+    
+
+    title = models.CharField(max_length=200)
+    image = models.ImageField(upload_to='ads/')
+    link = models.URLField(blank=True, null=True)
+    position = models.CharField(max_length=20, choices=POSITION_CHOICES, default='top')  
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    is_active = models.BooleanField(default=True)
+    is_approved = models.BooleanField(default=False) 
+
+
     def __str__(self):
         return self.title

@@ -54,6 +54,14 @@
         <span id="nepal-time">Nepal Time: Loading...</span>
     </div>
 
+    {% if ads_top %}
+    <div class="ad-section ad-top">
+        {% for ad in ads_top %}
+        <a href="{{ ad.url }}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}"></a>
+        {% endfor %}
+    </div>
+    {% endif %}
+
     <div class="sidebar">
         <button class="close-btn" onclick="toggleSidebar()"><img class="close" src="{% static 'images/close.png' %}" alt="Close button"></button>
         <ul>
@@ -61,6 +69,9 @@
             {% for category in categories %}
             <li><a href="{% url 'category-post' category.id %}">{{ category.name }}</a></li>
             {% endfor %}
+            {% if request.user.is_authenticated and request.user.userprofile.role == 'ads_manager' %}
+                <li><a href="{% url 'list_ads' %}">Advertisements</a></li>
+            {% endif %}
             {% if user.is_authenticated %}
                 <li><a href="{% url 'logout' %}">Logout</a></li>
                 {% if user.userprofile.role == 'writer' %}
@@ -73,6 +84,13 @@
                 <li><a href="{% url 'login-user' %}">Login</a></li>
             {% endif %}
         </ul>
+        {% if ads_sidebar %}
+            <div class="ad-section ad-sidebar">
+            {% for ad in ads_sidebar %}
+                <a href="{{ ad.url }}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}"></a>
+            {% endfor %}
+            </div>
+        {% endif %}
     </div>
 
     {% block content %}
@@ -94,5 +112,12 @@
     </footer>
 
     <script src="{% static 'js/scripts.js' %}"></script>
+    {% if ads_bottom %}
+    <div class="ad-section ad-bottom">
+        {% for ad in ads_bottom %}
+        <a href="{{ ad.url }}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}"></a>
+        {% endfor %}
+    </div>
+    {% endif %}
 </body>
 </html>

@@ -19,6 +19,9 @@ from newsapp import views
 from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
+
+
+
 urlpatterns = [
     path('', views.home_page, name='home-page'),
     path('admin/', admin.site.urls),
@@ -32,6 +35,10 @@ urlpatterns = [
     path('post-approval/', views.post_approval, name='post-approval'),
     path('profile/', views.profile_page, name='profile-page'),
     path('search/', views.search_posts, name='search-posts'),
+    path('ads/create/', views.create_advertisement, name='create_ad'),
+    path('ads/<int:ad_id>/edit/', views.edit_advertisement, name='edit_advertisement'),
+    path('ads/<int:ad_id>/delete/', views.delete_advertisement, name='delete_advertisement'),
+    path('ads/', views.list_advertisements, name='list_ads'),
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
