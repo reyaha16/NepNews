@@ -39,6 +39,7 @@
             </div>
         </div>
     </header>
+    <div class="progress" id="progressBar"></div>
 
     <div class="time-container">
         <span id="nepal-time">Nepal Time: Loading...</span>
@@ -123,6 +124,9 @@
 
     {% block content %}
     {% endblock %}
+    <button class="scroll-to-top" id="scrollToTopBtn">
+        <img src="{% static 'images/arrow.png' %}" alt="Scroll to Top">
+    </button>
 
     <footer>
         <p>© 2025 NepNews. All rights reserved.</p>

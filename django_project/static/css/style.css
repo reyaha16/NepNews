@@ -5,7 +5,7 @@ body {
     font-family: Arial, sans-serif;
     display: flex;
     flex-direction: column;
-    justify-content: space-evenly;
+    min-height: 100vh;
 }
 
 header {
@@ -13,11 +13,14 @@ header {
     height: 50px;
     width: 100%;
     margin: 0;
-    padding: 0px;
+    padding: 0;
     display: flex;
     justify-content: space-evenly;
     align-items: center;
     overflow: hidden;
+    position: fixed;
+    top: 0;
+    z-index: 1000;
 }
 
 .nav-container {
@@ -198,7 +201,6 @@ header {
     color: #555;
 }
 
-/* Optional for responsiveness */
 @media (max-width: 768px) {
     .news-container {
         padding: 15px;
@@ -349,10 +351,12 @@ button:hover {
 }
 
 footer {
+    flex-shrink: 0;
     background-color: black;
     color: white;
     text-align: center;
     padding: 5px;
+    margin-top: auto;
 }
 
 footer ul {
@@ -456,6 +460,52 @@ footer a:hover {
 .post-card p {
     color: #666;
     font-size: 0.9rem;
+}
+
+.progress {
+    height: 5px;
+    background: red;
+    position: fixed;
+    top: 50px; /* Just below the 50px navigation bar */
+    left: 0;
+    width: 0;
+    transition: width 0.2s ease-out;
+    z-index: 999;
+}
+
+.scroll-to-top {
+    display: none;
+    position: fixed;
+    bottom: 210px;
+    right: 20px;
+    background-color:black;
+    border: none;
+    cursor: pointer;
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    padding: 0;
+    transition: opacity 0.3s ease-in-out, background-color 0.3s ease-in-out;
+    z-index: 998;
+    opacity: 0;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.3);
+}
+
+.scroll-to-top.show {
+    display: block;
+    opacity: 1;
+}
+
+.scroll-to-top:hover {
+    background-color: black;
+}
+
+.scroll-to-top img {
+    width: 24px;
+    height: 24px;
+    margin: auto;
+    display: block;
+    filter: invert(1);
 }
 .form-message {
     margin-top: 10px;

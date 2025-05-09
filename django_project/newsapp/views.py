@@ -203,3 +203,15 @@ def search_posts(request):
         
         return render(request, 'search-post.html', context)
     return redirect('home-page')
+
+def about(request):
+    return render(request, 'about.html')
+
+def contact(request):
+    return render(request, 'contact.html')
+
+def privacy_policy(request):
+    return render(request, 'privacy-policy.html')
+
+def terms(request):
+    return render(request, 'terms.html')

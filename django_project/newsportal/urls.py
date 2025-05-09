@@ -34,6 +34,10 @@ urlpatterns = [
     path('post-approval/', views.post_approval, name='post-approval'),
     path('profile/', views.profile_page, name='profile-page'),
     path('search/', views.search_posts, name='search-posts'),
+    path('about/', views.about, name='about-page'),
+    path('contact/', views.contact, name='contact-page'),
+    path('privacy-policy/', views.privacy_policy, name='privacy-policy-page'),
+    path('terms/', views.terms, name='terms-page'),
 ]
 
 if settings.DEBUG:
