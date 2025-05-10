@@ -101,11 +101,9 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     }
 
-    // Handle Forgot Password Form Submission
     if (forgotPasswordForm) {
         forgotPasswordForm.addEventListener("submit", function (e) {
             e.preventDefault();
-            // Remove any existing error/success messages
             const existingMessage = forgotPasswordForm.querySelector('.form-message');
             if (existingMessage) existingMessage.remove();
 
@@ -163,6 +161,86 @@ document.addEventListener("DOMContentLoaded", function () {
             }
         });
     }
+
+    // Like Button Functionality
+    const likeButtons = document.querySelectorAll(".like-btn");
+    if (likeButtons.length === 0) {
+        console.log("No like buttons found on the page.");
+    }
+    likeButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const postId = this.getAttribute("data-post-id");
+            if (!postId) {
+                console.error("Post ID not found on like button.");
+                return;
+            }
+            fetch(`/post/${postId}/like/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    console.error('Server error:', data.error);
+                    alert('Error: ' + data.error);
+                    return;
+                }
+                this.textContent = data.liked ? `Unlike (${data.like_count})` : `Like (${data.like_count})`;
+            })
+            .catch(error => {
+                console.error('Error during like request:', error);
+                alert('An error occurred while liking the post. Please try again.');
+            });
+        });
+    });
+
+    // Bookmark Button Functionality
+    const bookmarkButtons = document.querySelectorAll(".bookmark-btn");
+    if (bookmarkButtons.length === 0) {
+        console.log("No bookmark buttons found on the page.");
+    }
+    bookmarkButtons.forEach(button => {
+        button.addEventListener("click", function () {
+            const postId = this.getAttribute("data-post-id");
+            if (!postId) {
+                console.error("Post ID not found on bookmark button.");
+                return;
+            }
+            fetch(`/post/${postId}/bookmark/`, {
+                method: 'POST',
+                headers: {
+                    'X-CSRFToken': document.querySelector('input[name="csrfmiddlewaretoken"]').value,
+                    'Content-Type': 'application/json'
+                }
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.error) {
+                    console.error('Server error:', data.error);
+                    alert('Error: ' + data.error);
+                    return;
+                }
+                this.textContent = data.bookmarked ? 'Remove Bookmark' : 'Bookmark';
+            })
+            .catch(error => {
+                console.error('Error during bookmark request:', error);
+                alert('An error occurred while bookmarking the post. Please try again.');
+            });
+        });
+    });
 });
 
 function openAuthModal() {
