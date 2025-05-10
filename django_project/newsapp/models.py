@@ -32,6 +32,7 @@ class Post(models.Model):
         ('draft', 'Draft'),
         ('published', 'Published'),
         ('unpublished', 'Unpublished'),
+        ('edited', 'Edited After Approval'),  # new status
     )
     
     title = models.CharField(max_length=200)

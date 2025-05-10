@@ -46,15 +46,17 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    const userIcon = document.querySelector(".user");
+    const userIcon = document.getElementById("user-icon");
     const authModal = document.getElementById("auth-modal");
     const forgotPasswordModal = document.getElementById("forgot-password-modal");
     const closeModal = document.getElementById("close-modal");
     const closeForgotPassword = document.getElementById("close-forgot-password");
     const forgotPasswordBtn = document.getElementById("forgot-password-btn");
     const forgotPasswordForm = document.getElementById("forgot-password-form");
-    const loginForm = document.getElementById("login-form");
-    const signupForm = document.getElementById("signup-form");
+    const loginForm = document.getElementById("login-form").querySelector("form");
+    const signupForm = document.getElementById("signup-form").querySelector("form");
+    const loginFormContainer = document.getElementById("login-form");
+    const signupFormContainer = document.getElementById("signup-form");
     const showSignup = document.getElementById("show-signup");
     const showLogin = document.getElementById("show-login");
     const searchForm = document.getElementById("search-form");
@@ -88,16 +90,36 @@ document.addEventListener("DOMContentLoaded", function () {
     if (showSignup) {
         showSignup.addEventListener("click", function (e) {
             e.preventDefault();
-            if (loginForm) loginForm.classList.add("hidden");
-            if (signupForm) signupForm.classList.remove("hidden");
+            if (loginFormContainer) loginFormContainer.classList.add("hidden");
+            if (signupFormContainer) signupFormContainer.classList.remove("hidden");
         });
     }
 
     if (showLogin) {
         showLogin.addEventListener("click", function (e) {
             e.preventDefault();
-            if (signupForm) signupForm.classList.add("hidden");
-            if (loginForm) loginForm.classList.remove("hidden");
+            if (signupFormContainer) signupFormContainer.classList.add("hidden");
+            if (loginFormContainer) loginFormContainer.classList.remove("hidden");
+        });
+    }
+
+    // Login form submission handling
+    if (loginForm) {
+        loginForm.addEventListener("submit", function(e) {
+            // We don't prevent default here to allow the normal form submission
+            // which will redirect to the login URL
+            console.log("Login form submitted");
+            // The form will naturally submit to the action URL
+        });
+    }
+
+    // Signup form submission handling
+    if (signupForm) {
+        signupForm.addEventListener("submit", function(e) {
+            // We don't prevent default here to allow the normal form submission
+            // which will redirect to the signup URL
+            console.log("Signup form submitted");
+            // The form will naturally submit to the action URL
         });
     }
 

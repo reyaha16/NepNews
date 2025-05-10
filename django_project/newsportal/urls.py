@@ -33,11 +33,14 @@ urlpatterns = [
     path('post/<int:id>/', views.view_post, name='view-post'),
     path('new-post/', views.new_post, name='new-post'),
     path('post-approval/', views.post_approval, name='post-approval'),
-    path('profile/', views.profile_page, name='profile-page'),
+    path('profile/', views.profile_page, name='profile'),  # ✅ simplified name
+    path('profile/edit/', views.edit_profile, name='edit-profile'),
     path('search/', views.search_posts, name='search-posts'),
     path('post/<int:post_id>/like/', views.like_post, name='like-post'),
     path('post/<int:post_id>/bookmark/', views.bookmark_post, name='bookmark-post'),
     path('post/<int:post_id>/comment/', views.add_comment, name='add-comment'),
+    path('post/edit/<int:id>/', views.edit_post, name='edit-post'),
+    path('post/<int:id>/delete/', views.delete_post, name='delete-post'),
 ]
 
 if settings.DEBUG:

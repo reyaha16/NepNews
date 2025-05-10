@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block content %}
+<div style="max-width: 600px; margin: 80px auto 20px; padding: 20px;">
+    <h2>Edit Profile</h2>
+    <form method="POST" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ user_form.as_p }}
+        {{ profile_form.as_p }}
+        <button type="submit" class="btn btn-primary">Update</button>
+        <a href="{% url 'profile' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+{% endblock %}

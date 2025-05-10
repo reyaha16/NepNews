@@ -1,28 +1,58 @@
 {% extends 'base.html' %}
 {% block content %}
 <div style="max-width: 800px; margin: 80px auto 20px; padding: 20px;">
-    <h2>Your Profile</h2>
-    {% if user.userprofile.profile_pic %}
-        <img src="{{ user.userprofile.profile_pic.url }}" alt="Profile Picture" style="width: 100px; height: auto; border-radius: 50%;">
-    {% endif %}
-    <p><strong>Username:</strong> {{ user.username }}</p>
-    <p><strong>Email:</strong> {{ user.email }}</p>
-    <p><strong>Role:</strong> {{ user.userprofile.get_role_display }}</p>
-    {% if user.userprofile.bio %}
-        <p><strong>Bio:</strong> {{ user.userprofile.bio }}</p>
-    {% endif %}
+    <div style="display: flex; align-items: center; justify-content: space-between;">
+        <h2>Your Profile</h2>
+        <a href="{% url 'edit-profile' %}" class="btn btn-primary" style="padding: 8px 16px;">Edit Profile</a>
+    </div>
+
+    <div style="display: flex; gap: 20px; margin-top: 20px; flex-wrap: wrap;">
+        {% if user.userprofile.profile_pic %}
+            <img src="{{ user.userprofile.profile_pic.url }}" alt="Profile Picture" 
+                 style="width: 120px; height: 120px; object-fit: cover; border-radius: 50%; border: 2px solid #ccc;">
+        {% else %}
+            <div style="width: 120px; height: 120px; background: #eee; border-radius: 50%; 
+                        display: flex; align-items: center; justify-content: center; color: #777;">
+                No Image
+            </div>
+        {% endif %}
+
+        <div style="flex: 1;">
+            <p><strong>Username:</strong> {{ user.username }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Role:</strong> {{ user.userprofile.get_role_display }}</p>
+            {% if user.userprofile.bio %}
+                <p><strong>Bio:</strong><br>{{ user.userprofile.bio }}</p>
+            {% endif %}
+        </div>
+    </div>
+
     {% if user.userprofile.role == 'writer' %}
+        <hr>
         <h3>Your Posts</h3>
-        {% for post in user.post_set.all %}
-            <p>{{ post.title }} - {{ post.status }}</p>
-        {% endfor %}
+        {% if user.post_set.all %}
+            <ul style="padding-left: 20px;">
+                {% for post in user.post_set.all %}
+                    <li>{{ post.title }} - <em>{{ post.status }}</em></li>
+                {% endfor %}
+            </ul>
+        {% else %}
+            <p>You haven't written any posts yet.</p>
+        {% endif %}
     {% endif %}
 
+    <hr>
     <h3>Bookmarked Posts</h3>
-    {% for bookmark in user.bookmark_set.all %}
-        <p><a href="{% url 'view-post' bookmark.post.id %}">{{ bookmark.post.title }}</a></p>
-    {% empty %}
+    {% if user.bookmark_set.all %}
+        <ul style="padding-left: 20px;">
+            {% for bookmark in user.bookmark_set.all %}
+                <li>
+                    <a href="{% url 'view-post' bookmark.post.id %}">{{ bookmark.post.title }}</a>
+                </li>
+            {% endfor %}
+        </ul>
+    {% else %}
         <p>No bookmarked posts.</p>
-    {% endfor %}
+    {% endif %}
 </div>
 {% endblock %}
