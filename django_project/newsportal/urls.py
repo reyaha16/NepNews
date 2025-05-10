@@ -21,14 +21,15 @@ from django.contrib import admin
 from django.conf.urls.static import static
 from django.conf import settings
 
+
+
 urlpatterns = [
     path('', views.home_page, name='home-page'),
     path('admin/', admin.site.urls),
     path('login/', views.login_user, name='login-user'),
     path('signup/', views.signup, name='signup'),
     path('logout/', views.logout_user, name='logout'),
-    path('forgot-password/', views.forgot_password, name='forgot-password'),
-    path('reset-password/<uidb64>/<token>/', views.reset_password, name='reset-password'),
+    path('reset-password/', views.reset_password, name='reset-password'),
     path('category/<int:id>/', views.category_post, name='category-post'),
     path('post/<int:id>/', views.view_post, name='view-post'),
     path('new-post/', views.new_post, name='new-post'),
@@ -41,6 +42,15 @@ urlpatterns = [
     path('post/<int:post_id>/comment/', views.add_comment, name='add-comment'),
     path('post/edit/<int:id>/', views.edit_post, name='edit-post'),
     path('post/<int:id>/delete/', views.delete_post, name='delete-post'),
+    path('ads/create/', views.create_advertisement, name='create_ad'),
+    path('ads/<int:ad_id>/edit/', views.edit_advertisement, name='edit_advertisement'),
+    path('ads/<int:ad_id>/delete/', views.delete_advertisement, name='delete_advertisement'),
+    path('ads/', views.list_advertisements, name='list_ads'),
+
+    path('about/', views.about, name='about-page'),
+    path('contact/', views.contact, name='contact-page'),
+    path('privacy-policy/', views.privacy_policy, name='privacy-policy-page'),
+    path('terms/', views.terms, name='terms-page'),
 ]
 
 if settings.DEBUG:

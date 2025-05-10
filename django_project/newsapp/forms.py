@@ -1,12 +1,24 @@
 from django import forms
+<<<<<<< HEAD
 from django.contrib.auth.models import User
 from .models import Post, UserProfile
+=======
+from .models import Advertisement
+
+class AdvertisementForm(forms.ModelForm):
+    class Meta:
+        model = Advertisement
+        fields = ['title', 'image', 'link', 'is_active']
+
+from .models import Post
+>>>>>>> b3e7c98be4789099278f1efadb84d36447b33da8
 
 class PostForm(forms.ModelForm):
     class Meta:
         model = Post
         fields = ['title', 'short_description', 'content', 'category', 'banner_path', 'status']
         widgets = {
+<<<<<<< HEAD
             'status': forms.Select(choices=[('draft', 'Draft'), ('published', 'Published'), ('unpublished', 'Unpublished'), ('edited', 'Edited After Approval')]),
             'title': forms.TextInput(attrs={'class': 'form-control'}),
             'short_description': forms.Textarea(attrs={'rows': 3, 'class': 'form-control'}),
@@ -32,3 +44,8 @@ class UserProfileForm(forms.ModelForm):
             'bio': forms.Textarea(attrs={'rows': 4, 'class': 'form-control'}),
             'profile_pic': forms.FileInput(attrs={'class': 'form-control'}),
         }
+=======
+            'status': forms.Select(choices=[('draft', 'Draft'), ('published', 'Published'), ('approved', 'Approved'), ('pending', 'Pending'), ('edited', 'Edited')]),
+        }
+
+>>>>>>> b3e7c98be4789099278f1efadb84d36447b33da8

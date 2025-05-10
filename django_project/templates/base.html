@@ -23,14 +23,30 @@
             </nav>
             <div class="right-icons">
                 <div class="search-container">
-                    <form action="{% url 'search-posts' %}" method="get" id="search-form">
-                        {% csrf_token %}
-                        <input type="text" name="q" class="search-input" placeholder="Search news..." value="{{ query|default_if_none:'' }}">
+                    <form action="{% url 'search-posts' %}" method="get" class="search-form">
+                        <!-- <input type="text" name="q" class="search-input" placeholder="Search news..." value="{{ request.GET.q }}"> -->
+                        
+                        <div class="custom-select">
+                            <select name="category" class="search-category">
+                                <option value="">All</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ category.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- <button type="submit" class="search-button">
+                            <img src="{% static 'images/search.png' %}" alt="Search" class="search-icon">
+                        </button> -->
+                        <input type="text" name="q" class="search-input" placeholder="Search news..." value="{{ request.GET.q }}">
                         <button type="submit" class="search-button">
                             <img src="{% static 'images/search.png' %}" alt="Search" class="search-icon">
                         </button>
                     </form>
                 </div>
+         
                 {% if user.is_authenticated %}
                     <a href="{% url 'profile' %}">
                         <img class="user" src="{% static 'images/user.png' %}" alt="User Profile">
@@ -41,6 +57,7 @@
             </div>
         </div>
     </header>
+    <div class="progress" id="progressBar"></div>
 
     <div class="time-container">
         <span id="nepal-time">Nepal Time: Loading...</span>
@@ -55,6 +72,9 @@
             {% for category in categories %}
                 <li><a href="{% url 'category-post' category.id %}">{{ category.name }}</a></li>
             {% endfor %}
+            {% if request.user.is_authenticated and request.user.userprofile.role == 'ads_manager' %}
+                <li><a href="{% url 'list_ads' %}">Advertisements</a></li>
+            {% endif %}
             {% if user.is_authenticated %}
                 <li><a href="{% url 'profile' %}">Profile</a></li>
                 <li><a href="{% url 'logout' %}">Logout</a></li>
@@ -142,7 +162,20 @@
 
     {% block content %}
     {% endblock %}
+    <button class="scroll-to-top" id="scrollToTopBtn">
+        <img src="{% static 'images/arrow.png' %}" alt="Scroll to Top">
+    </button>
 
+    <div class="ads_content">
+        {% if ads_bottom %}
+        <div class="ad-section ad-bottom">
+            {% for ad in ads_bottom %}
+            <a href="{{ ad.url }}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}"></a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    </div>
     <footer>
         <p>© 2025 NepNews. All rights reserved.</p>
         <ul>
@@ -159,5 +192,6 @@
     </footer>
 
     <script src="{% static 'js/scripts.js' %}"></script>
+    
 </body>
 </html>

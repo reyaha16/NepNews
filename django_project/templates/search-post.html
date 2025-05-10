@@ -1,7 +1,16 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="search-results">
-    <h2>Search Results for "{{ query }}"</h2>
+    {% if query %}
+        <h2>Search Results for "{{ query }}"</h2>
+    {% else %}
+        <h2>Search Results</h2>
+    {% endif %}
+
+    {% if selected_category_name %}
+        <h3>Category: {{ selected_category_name }}</h3>
+    {% endif %}
+
     {% if message %}
         <p>{{ message }}</p>
     {% else %}

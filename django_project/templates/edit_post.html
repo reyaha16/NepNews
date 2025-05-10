@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+  <form method="post" enctype="multipart/form-data">
+    {% csrf_token %}
+    <label>Title:</label>
+    <input type="text" name="title" value="{{ post.title }}" required>
+
+    <label>Short Description:</label>
+    <textarea name="short_description" required>{{ post.short_description }}</textarea>
+
+    <label>Content:</label>
+    <textarea name="content" required>{{ post.content }}</textarea>
+
+    <label>Category:</label>
+    <select name="category" required>
+        {% for category in categories %}
+            <option value="{{ category.id }}" {% if post.category.id == category.id %}selected{% endif %}>
+                {{ category.name }}
+            </option>
+        {% endfor %}
+    </select>
+
+    <label>Status:</label>
+    <select name="status">
+        <option value="draft" {% if post.status == 'draft' %}selected{% endif %}>Draft</option>
+        <option value="published" {% if post.status == 'published' %}selected{% endif %}>Published</option>
+    </select>
+
+    <label>Change Banner (optional):</label>
+    <input type="file" name="banner">
+
+    <button type="submit">Update Post</button>
+  </form>
+{% endblock %}
