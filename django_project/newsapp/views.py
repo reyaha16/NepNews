@@ -9,9 +9,11 @@ from .models import Advertisement
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import AdvertisementForm
+from functools import wraps 
 
 def role_required(*roles):
     def decorator(view_func):
+        @wraps(view_func)  
         def wrapper(request, *args, **kwargs):
             if request.user.is_authenticated and request.user.userprofile.role in roles:
                 return view_func(request, *args, **kwargs)
@@ -21,8 +23,8 @@ def role_required(*roles):
 
 def home_page(request):
     posts = Post.objects.filter(status='published').order_by('-created_at')
+    ads = Advertisement.objects.filter(is_approved=True, is_active=True)
 
-    ads = Advertisement.objects.all()
     context = {
         'posts': posts,
         'ads_top': ads.filter(position='top'),
@@ -32,6 +34,7 @@ def home_page(request):
     }
 
     return render(request, 'index.html', context)
+
     return render(request, 'index.html', {'posts': posts})
 
 def login_user(request):
@@ -138,6 +141,26 @@ def post_approval(request):
     return render(request, 'post_approval.html', {'drafts': drafts})
 
 @login_required
+@role_required('editor', 'admin')
+def edit_post(request, id):
+    post = get_object_or_404(Post, id=id)
+
+    if request.method == 'POST':
+        post.title = request.POST.get('title')
+        post.short_description = request.POST.get('short_description')
+        post.content = request.POST.get('content')
+        post.category_id = request.POST.get('category')
+        post.banner_path = request.FILES.get('banner') or post.banner_path
+        post.status = request.POST.get('status')
+        post.save()
+        return redirect('home-page')
+
+    categories = Category.objects.all()
+    return render(request, 'edit_post.html', {'post': post, 'categories': categories})
+
+
+
+@login_required
 def profile_page(request):
     return render(request, 'profile.html', {'user': request.user})
 
@@ -227,3 +250,23 @@ def delete_advertisement(request, ad_id):
     if request.method == 'POST':
         ad.delete()
     return redirect('list_ads')
+
+
+@login_required
+@user_passes_test(lambda u: u.userprofile.role == 'admin')
+def review_advertisements(request):
+    pending_ads = Advertisement.objects.filter(is_approved=False)
+
+    if request.method == 'POST':
+        ad_id = request.POST.get('ad_id')
+        action = request.POST.get('action')
+        ad = get_object_or_404(Advertisement, id=ad_id)
+        
+        if action == 'approve':
+            ad.is_approved = True
+            ad.save()
+        elif action == 'reject':
+            ad.delete()
+        return redirect('review_ads')
+
+    return render(request, 'ads/review_ads.html', {'pending_ads': pending_ads})

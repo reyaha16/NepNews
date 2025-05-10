@@ -12,7 +12,9 @@
                 <select name="status">
                     <option value="draft">Draft</option>
                     <option value="published">Publish</option>
+                    <option value="published">Publish</option>
                 </select>
+                <a href="{% url 'edit_post' post.id %}" class="btn btn-secondary">Edit</a>
                 <button type="submit">Update</button>
             </form>
         </div>

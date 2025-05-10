@@ -23,24 +23,30 @@
             </nav>
             <div class="right-icons">
                 <div class="search-container">
-                    <form action="{% url 'search-posts' %}" method="get" style="display: flex; gap: 6px;">
+                    <form action="{% url 'search-posts' %}" method="get" class="search-form">
+                        <!-- <input type="text" name="q" class="search-input" placeholder="Search news..." value="{{ request.GET.q }}"> -->
+                        
+                        <div class="custom-select">
+                            <select name="category" class="search-category">
+                                <option value="">All</option>
+                                {% for category in categories %}
+                                    <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
+                                        {{ category.name }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        
+                        <!-- <button type="submit" class="search-button">
+                            <img src="{% static 'images/search.png' %}" alt="Search" class="search-icon">
+                        </button> -->
                         <input type="text" name="q" class="search-input" placeholder="Search news..." value="{{ request.GET.q }}">
-                        
-                        <select name="category" class="search-category" style="padding: 6px;">
-                            <option value="">All</option>
-                            {% for category in categories %}
-                                <option value="{{ category.id }}" {% if request.GET.category == category.id|stringformat:"s" %}selected{% endif %}>
-                                    {{ category.name }}
-                                </option>
-                            {% endfor %}
-                        </select>
-                        
                         <button type="submit" class="search-button">
                             <img src="{% static 'images/search.png' %}" alt="Search" class="search-icon">
                         </button>
                     </form>
-                    
                 </div>
+         
                 {% if user.is_authenticated %}
                     <a href="{% url 'profile-page' %}"><img class="user" src="{% static 'images/user.png' %}" alt="User Profile"></a>
                 {% else %}
@@ -62,7 +68,7 @@
     </div>
     {% endif %}
 
-    <div class="sidebar">
+   <div class="sidebar">
         <button class="close-btn" onclick="toggleSidebar()"><img class="close" src="{% static 'images/close.png' %}" alt="Close button"></button>
         <ul>
             <li><a href="{% url 'home-page' %}">Home</a></li>
@@ -96,6 +102,16 @@
     {% block content %}
     {% endblock %}
 
+    <div class="ads_content">
+        {% if ads_bottom %}
+        <div class="ad-section ad-bottom">
+            {% for ad in ads_bottom %}
+            <a href="{{ ad.url }}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}"></a>
+        {% endfor %}
+    </div>
+    {% endif %}
+    
+    </div>
     <footer>
         <p>© 2025 NepNews. All rights reserved.</p>
         <ul>
@@ -112,12 +128,6 @@
     </footer>
 
     <script src="{% static 'js/scripts.js' %}"></script>
-    {% if ads_bottom %}
-    <div class="ad-section ad-bottom">
-        {% for ad in ads_bottom %}
-        <a href="{{ ad.url }}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}"></a>
-        {% endfor %}
-    </div>
-    {% endif %}
+    
 </body>
 </html>

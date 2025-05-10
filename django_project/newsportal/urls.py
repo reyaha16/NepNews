@@ -33,6 +33,7 @@ urlpatterns = [
     path('post/<int:id>/', views.view_post, name='view-post'),
     path('new-post/', views.new_post, name='new-post'),
     path('post-approval/', views.post_approval, name='post-approval'),
+    path('posts/<int:id>/edit/', views.edit_post, name='edit_post'),
     path('profile/', views.profile_page, name='profile-page'),
     path('search/', views.search_posts, name='search-posts'),
     path('ads/create/', views.create_advertisement, name='create_ad'),

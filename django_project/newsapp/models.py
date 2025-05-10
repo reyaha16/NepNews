@@ -13,6 +13,7 @@ class UserProfile(models.Model):
     role = models.CharField(max_length=15, choices=ROLE_CHOICES, default='user')
     bio = models.TextField(blank=True, null=True)
     profile_pic = models.ImageField(upload_to='profile_pics/', blank=True, null=True)
+    
 
     def __str__(self):
         return f"{self.user.username} - {self.get_role_display()}"
@@ -33,6 +34,7 @@ class Post(models.Model):
         ('draft', 'Draft'),
         ('published', 'Published'),
         ('unpublished', 'Unpublished'),
+        ('edit', 'Edit'),
     )
     
     title = models.CharField(max_length=200)
@@ -73,7 +75,6 @@ class Advertisement(models.Model):
     updated_at = models.DateTimeField(auto_now=True)
     is_active = models.BooleanField(default=True)
     is_approved = models.BooleanField(default=False) 
-
 
     def __str__(self):
         return self.title
