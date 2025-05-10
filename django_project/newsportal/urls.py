@@ -14,6 +14,7 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+# newsapp/urls.py
 from django.urls import path
 from newsapp import views
 from django.contrib import admin
@@ -36,10 +37,22 @@ urlpatterns = [
     path('posts/<int:id>/edit/', views.edit_post, name='edit_post'),
     path('profile/', views.profile_page, name='profile-page'),
     path('search/', views.search_posts, name='search-posts'),
+
     path('ads/create/', views.create_advertisement, name='create_ad'),
     path('ads/<int:ad_id>/edit/', views.edit_advertisement, name='edit_advertisement'),
     path('ads/<int:ad_id>/delete/', views.delete_advertisement, name='delete_advertisement'),
     path('ads/', views.list_advertisements, name='list_ads'),
+
+    path('about/', views.about, name='about-page'),
+    path('contact/', views.contact, name='contact-page'),
+    path('privacy-policy/', views.privacy_policy, name='privacy-policy-page'),
+    path('terms/', views.terms, name='terms-page'),
+    path('post/<int:post_id>/like/', views.like_post, name='like-post'),
+    path('post/<int:post_id>/bookmark/', views.bookmark_post, name='bookmark-post'),
+    path('post/<int:post_id>/comment/', views.add_comment, name='add-comment'),
+    path('post/edit/<int:id>/', views.edit_post, name='edit-post'),
+    path('post/<int:id>/delete/', views.delete_post, name='delete-post'),
+
 ]
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

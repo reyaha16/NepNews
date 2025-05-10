@@ -3,13 +3,22 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.contrib import messages
-from .models import Post, Category, UserProfile
+from .models import Post, Category, UserProfile, Like, Bookmark, Comment
 from django.db.models import Q
 from .models import Advertisement
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from .forms import AdvertisementForm
 from functools import wraps 
+from django.core.mail import send_mail
+from django.conf import settings
+from django.contrib.auth.tokens import PasswordResetTokenGenerator
+from django.utils.http import urlsafe_base64_encode, urlsafe_base64_decode
+from django.utils.encoding import force_bytes, force_str
+from django.urls import reverse
+from django.http import JsonResponse
+from django.views.decorators.http import require_POST
+from .forms import PostForm
 
 def role_required(*roles):
     def decorator(view_func):
@@ -23,6 +32,7 @@ def role_required(*roles):
 
 def home_page(request):
     posts = Post.objects.filter(status='published').order_by('-created_at')
+
     ads = Advertisement.objects.filter(is_approved=True, is_active=True)
 
     context = {
@@ -36,6 +46,10 @@ def home_page(request):
     return render(request, 'index.html', context)
 
     return render(request, 'index.html', {'posts': posts})
+
+    categories = Category.objects.all()
+    return render(request, 'index.html', {'posts': posts, 'categories': categories})
+
 
 def login_user(request):
     if request.method == 'POST':
@@ -86,9 +100,30 @@ def logout_user(request):
 def reset_password(request):
     if request.method == 'POST':
         email = request.POST.get('email')
+
         if User.objects.filter(email=email).exists():
             messages.success(request, 'A password reset link has been sent to your email.')
         else:
+
+        try:
+            user = User.objects.get(email=email)
+            token_generator = PasswordResetTokenGenerator()
+            token = token_generator.make_token(user)
+            uid = urlsafe_base64_encode(force_bytes(user.pk))
+            reset_link = request.build_absolute_uri(
+                reverse('reset-password', kwargs={'uidb64': uid, 'token': token})
+            )
+            subject = 'NepNews Password Reset Link'
+            message = f'Click the link below to reset your password:\n\n{reset_link}\n\nThis link will expire in 1 hour.'
+            from_email = settings.EMAIL_HOST_USER
+            recipient_list = [email]
+            try:
+                send_mail(subject, message, from_email, recipient_list, fail_silently=False)
+                messages.success(request, 'A password reset link has been sent to your email.')
+            except Exception as e:
+                messages.error(request, f'Failed to send email: {str(e)}')
+        except User.DoesNotExist:
+
             messages.error(request, 'Email not found.')
         return redirect('home-page')
     return render(request, 'index.html')
@@ -100,11 +135,13 @@ def category_post(request, id):
     posts = Post.objects.filter(category=category, status='published')
     return render(request, 'category_post.html', {'category': category, 'posts': posts})
 
+
 def view_post(request, id):
     post = get_object_or_404(Post, id=id, status='published')
     post.views += 1
     post.save()
     return render(request, 'view-post.html', {'post': post})
+
 
 @login_required
 @role_required('writer', 'editor', 'admin')
@@ -194,11 +231,29 @@ def search_posts(request):
             'posts': posts,
         }
 
+
         if not posts.exists():
             context['message'] = f"No results found for '{query}'." if query else "No results found."
 
+        if not query:
+            context['message'] = "Please enter a search term."
+            return render(request, 'search-post.html', context)
+
+        posts = Post.objects.filter(status='published').filter(
+            Q(title__icontains=query) |
+            Q(content__icontains=query) |
+            Q(short_description__icontains=query) |
+            Q(category__name__icontains=query)
+        ).distinct()
+
+        context['posts'] = posts
+        if not posts.exists():
+            context['message'] = f"No results found for '{query}'."
+
+
         return render(request, 'search-post.html', context)
     return redirect('home-page')
+
 
 def is_ads_manager(user):
     return hasattr(user, 'userprofile') and user.userprofile.role == 'ads_manager'
@@ -270,3 +325,118 @@ def review_advertisements(request):
         return redirect('review_ads')
 
     return render(request, 'ads/review_ads.html', {'pending_ads': pending_ads})
+
+
+def about(request):
+    return render(request, 'about.html')
+
+def contact(request):
+    return render(request, 'contact.html')
+
+def privacy_policy(request):
+    return render(request, 'privacy-policy.html')
+
+def terms(request):
+    return render(request, 'terms.html')
+
+def view_post(request, id):
+    post = get_object_or_404(Post, id=id)
+
+    if post.status != 'published':
+        if not request.user.is_authenticated or (
+            request.user != post.author and 
+            request.user.userprofile.role not in ['editor', 'admin']
+        ):
+            return render(request, '404.html', status=404)
+
+    post.views += 1
+    post.save()
+    comments = post.comments.all()
+    return render(request, 'view-post.html', {
+        'post': post,
+        'comments': comments,
+        'user': request.user,
+    })
+
+@login_required
+def like_post(request, post_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+    post = get_object_or_404(Post, id=post_id)
+    like, created = Like.objects.get_or_create(user=request.user, post=post)
+    if not created:
+        like.delete()
+        liked = False
+    else:
+        liked = True
+    return JsonResponse({'liked': liked, 'like_count': post.likes.count()})
+
+@login_required
+def bookmark_post(request, post_id):
+    if request.method != 'POST':
+        return JsonResponse({'error': 'Invalid request method'}, status=400)
+
+    post = get_object_or_404(Post, id=post_id)
+    bookmark, created = Bookmark.objects.get_or_create(user=request.user, post=post)
+    if not created:
+        bookmark.delete()
+        bookmarked = False
+    else:
+        bookmarked = True
+    return JsonResponse({'bookmarked': bookmarked})
+
+@login_required
+def add_comment(request, post_id):
+    post = get_object_or_404(Post, id=post_id)
+    if request.method == 'POST':
+        content = request.POST.get('content')
+        if content:
+            Comment.objects.create(user=request.user, post=post, content=content)
+            return redirect('view-post', id=post_id)
+    return redirect('view-post', id=post_id)
+
+@login_required
+@role_required('writer', 'editor', 'admin')
+def edit_post(request, id):
+    post = get_object_or_404(Post, id=id)
+
+    if request.user != post.author and request.user.userprofile.role not in ['editor', 'admin']:
+        return redirect('home-page')
+
+    if request.method == 'POST':
+        form = PostForm(request.POST, request.FILES, instance=post)
+
+        if request.user.userprofile.role == 'writer':
+            form.fields.pop('status', None)
+
+        if form.is_valid():
+            updated_post = form.save(commit=False)
+            if post.status == 'approved' and request.user.userprofile.role == 'writer':
+                updated_post.status = 'edited'
+            updated_post.save()
+            return redirect('view-post', id=updated_post.id)
+    else:
+        form = PostForm(instance=post)
+        if request.user.userprofile.role == 'writer':
+            form.fields.pop('status', None)
+
+    return render(request, 'edit-post.html', {
+        'form': form,
+        'post': post,
+    })
+
+@login_required
+@role_required('writer')
+@require_POST
+def delete_post(request, id):
+    post = get_object_or_404(Post, id=id)
+
+    if post.author != request.user:
+        messages.error(request, "You are not authorized to delete this post.")
+        return redirect('home-page')
+
+    post.delete()
+    messages.success(request, "Post deleted successfully.")
+    return redirect('home-page')
+

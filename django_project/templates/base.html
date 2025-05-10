@@ -55,6 +55,7 @@
             </div>
         </div>
     </header>
+    <div class="progress" id="progressBar"></div>
 
     <div class="time-container">
         <span id="nepal-time">Nepal Time: Loading...</span>
@@ -101,6 +102,9 @@
 
     {% block content %}
     {% endblock %}
+    <button class="scroll-to-top" id="scrollToTopBtn">
+        <img src="{% static 'images/arrow.png' %}" alt="Scroll to Top">
+    </button>
 
     <div class="ads_content">
         {% if ads_bottom %}

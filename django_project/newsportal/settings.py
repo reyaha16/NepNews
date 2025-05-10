@@ -88,4 +88,21 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+# Email settings for development (prints emails to console)
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_HOST_USER = 'noreply@nepnews.com'
+
+# For production, use SMTP (example with Gmail)
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = '@gmail.com'#
+EMAIL_HOST_PASSWORD = 'alyn aegm mlsr djtq'  # Use an App Password if using Gmail
+DEFAULT_FROM_EMAIL = '@gmail.com'#
+
