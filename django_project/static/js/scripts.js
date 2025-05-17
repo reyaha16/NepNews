@@ -3,13 +3,11 @@ function toggleSidebar() {
     sidebar.classList.toggle("active");
 }
 
-// Function to display Nepal time (UTC+5:45)
 function displayNepalTime() {
     const nepalTimeElement = document.getElementById("nepal-time");
     
     function updateTime() {
         const now = new Date();
-        // Format the time and date for Nepal
         const options = {
             timeZone: "Asia/Kathmandu",
             hour: "2-digit",
@@ -26,16 +24,16 @@ function displayNepalTime() {
             day: "numeric"
         });
         
-        nepalTimeElement.textContent = `Nepal Time: ${formattedDate}, ${formattedTime}`;
+        if (nepalTimeElement) {
+            nepalTimeElement.textContent = `Nepal Time: ${formattedDate}, ${formattedTime}`;
+        }
     }
     
-    // Update time immediately and then every second
     updateTime();
     setInterval(updateTime, 1000);
 }
 
 document.addEventListener("DOMContentLoaded", function () {
-    // Initialize Nepal time display
     displayNepalTime();
 
     let currentLocation = window.location.pathname.split("/").pop() || "index.html";
@@ -47,78 +45,58 @@ document.addEventListener("DOMContentLoaded", function () {
         }
     });
 
-    const userIcon = document.getElementById("user-icon");
+    const userIcon = document.querySelector(".user");
     const authModal = document.getElementById("auth-modal");
     const forgotPasswordModal = document.getElementById("forgot-password-modal");
     const closeModal = document.getElementById("close-modal");
     const closeForgotPassword = document.getElementById("close-forgot-password");
     const forgotPasswordBtn = document.getElementById("forgot-password-btn");
     const forgotPasswordForm = document.getElementById("forgot-password-form");
-    const loginForm = document.getElementById("login-form").querySelector("form");
-    const signupForm = document.getElementById("signup-form").querySelector("form");
-    const loginFormContainer = document.getElementById("login-form");
-    const signupFormContainer = document.getElementById("signup-form");
+    const loginForm = document.getElementById("login-form");
+    const signupForm = document.getElementById("signup-form");
     const showSignup = document.getElementById("show-signup");
     const showLogin = document.getElementById("show-login");
+    const searchForm = document.getElementById("search-form");
+    const searchIcon = document.querySelector(".search-icon");
 
     if (userIcon) {
         userIcon.addEventListener("click", function () {
-            authModal.classList.remove("hidden");
+            if (authModal) authModal.classList.remove("hidden");
         });
     }
 
     if (closeModal) {
         closeModal.addEventListener("click", function () {
-            authModal.classList.add("hidden");
+            if (authModal) authModal.classList.add("hidden");
         });
     }
 
     if (closeForgotPassword) {
         closeForgotPassword.addEventListener("click", function () {
-            forgotPasswordModal.classList.add("hidden");
+            if (forgotPasswordModal) forgotPasswordModal.classList.add("hidden");
         });
     }
 
     if (forgotPasswordBtn) {
         forgotPasswordBtn.addEventListener("click", function () {
-            authModal.classList.add("hidden");
-            forgotPasswordModal.classList.remove("hidden");
+            if (authModal) authModal.classList.add("hidden");
+            if (forgotPasswordModal) forgotPasswordModal.classList.remove("hidden");
         });
     }
 
     if (showSignup) {
         showSignup.addEventListener("click", function (e) {
             e.preventDefault();
-            if (loginFormContainer) loginFormContainer.classList.add("hidden");
-            if (signupFormContainer) signupFormContainer.classList.remove("hidden");
+            if (loginForm) loginForm.classList.add("hidden");
+            if (signupForm) signupForm.classList.remove("hidden");
         });
     }
 
     if (showLogin) {
         showLogin.addEventListener("click", function (e) {
             e.preventDefault();
-            if (signupFormContainer) signupFormContainer.classList.add("hidden");
-            if (loginFormContainer) loginFormContainer.classList.remove("hidden");
-        });
-    }
-
-    // Login form submission handling
-    if (loginForm) {
-        loginForm.addEventListener("submit", function(e) {
-            // We don't prevent default here to allow the normal form submission
-            // which will redirect to the login URL
-            console.log("Login form submitted");
-            // The form will naturally submit to the action URL
-        });
-    }
-
-    // Signup form submission handling
-    if (signupForm) {
-        signupForm.addEventListener("submit", function(e) {
-            // We don't prevent default here to allow the normal form submission
-            // which will redirect to the signup URL
-            console.log("Signup form submitted");
-            // The form will naturally submit to the action URL
+            if (signupForm) signupForm.classList.add("hidden");
+            if (loginForm) loginForm.classList.remove("hidden");
         });
     }
 
@@ -155,19 +133,17 @@ document.addEventListener("DOMContentLoaded", function () {
                 messageDiv.textContent = "An error occurred while communicating with the server.";
                 forgotPasswordForm.appendChild(messageDiv);
             });
-
         });
     }
 
     window.addEventListener("click", function (e) {
         if (e.target === authModal) {
-            authModal.classList.add("hidden");
+            if (authModal) authModal.classList.add("hidden");
         }
         if (e.target === forgotPasswordModal) {
-            forgotPasswordModal.classList.add("hidden");
+            if (forgotPasswordModal) forgotPasswordModal.classList.add("hidden");
         }
     });
-
 
     if (searchIcon) {
         searchIcon.addEventListener("click", function () {
@@ -267,20 +243,19 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function openAuthModal() {
-    document.getElementById("auth-modal").classList.remove("hidden");
+    const authModal = document.getElementById("auth-modal");
+    if (authModal) authModal.classList.remove("hidden");
 }
 
 function closeAuthModal() {
-    document.getElementById("auth-modal").classList.add("hidden");
+    const authModal = document.getElementById("auth-modal");
+    if (authModal) authModal.classList.add("hidden");
 }
 
 function closeForgotPasswordModal() {
-
-    document.getElementById("forgot-password-modal").classList.add("hidden");
-}
-
     const forgotPasswordModal = document.getElementById("forgot-password-modal");
     if (forgotPasswordModal) forgotPasswordModal.classList.add("hidden");
+}
 
 document.addEventListener("DOMContentLoaded", function () {
     const scrollToTopBtn = document.getElementById("scrollToTopBtn");

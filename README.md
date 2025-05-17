@@ -1,2 +1,0 @@
-# NepNews
-News Portal System

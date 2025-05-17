@@ -1,4 +1,5 @@
 {% load static %}
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -24,8 +25,6 @@
             <div class="right-icons">
                 <div class="search-container">
                     <form action="{% url 'search-posts' %}" method="get" class="search-form">
-                        <!-- <input type="text" name="q" class="search-input" placeholder="Search news..." value="{{ request.GET.q }}"> -->
-                        
                         <div class="custom-select">
                             <select name="category" class="search-category">
                                 <option value="">All</option>
@@ -36,17 +35,12 @@
                                 {% endfor %}
                             </select>
                         </div>
-                        
-                        <!-- <button type="submit" class="search-button">
-                            <img src="{% static 'images/search.png' %}" alt="Search" class="search-icon">
-                        </button> -->
                         <input type="text" name="q" class="search-input" placeholder="Search news..." value="{{ request.GET.q }}">
                         <button type="submit" class="search-button">
                             <img src="{% static 'images/search.png' %}" alt="Search" class="search-icon">
                         </button>
                     </form>
                 </div>
-         
                 {% if user.is_authenticated %}
                     <a href="{% url 'profile' %}">
                         <img class="user" src="{% static 'images/user.png' %}" alt="User Profile">
@@ -55,6 +49,15 @@
                     <img class="user" src="{% static 'images/user.png' %}" alt="User Profile" id="user-icon" onclick="openAuthModal()">
                 {% endif %}
             </div>
+            <!-- <div class="ads_content">
+                {% if header_ads %}
+                    <div class="ad-section ad-header">
+                        {% for ad in header_ads %}
+                            <a href="{{ ad.url }}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}"></a>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div> -->
         </div>
     </header>
     <div class="progress" id="progressBar"></div>
@@ -64,43 +67,28 @@
     </div>
 
     <div class="sidebar">
-        <button class="close-btn" onclick="toggleSidebar()">
-            <img class="close" src="{% static 'images/close.png' %}" alt="Close button">
-        </button>
+        <button class="close-btn" onclick="toggleSidebar()"><img class="close" src="{% static 'images/close.png' %}" alt="Close button"></button>
         <ul>
             <li><a href="{% url 'home-page' %}">Home</a></li>
             {% for category in categories %}
-                <li><a href="{% url 'category-post' category.id %}">{{ category.name }}</a></li>
+            <li><a href="{% url 'category-post' category.id %}">{{ category.name }}</a></li>
             {% endfor %}
             {% if request.user.is_authenticated and request.user.userprofile.role == 'ads_manager' %}
                 <li><a href="{% url 'list_ads' %}">Advertisements</a></li>
             {% endif %}
             {% if user.is_authenticated %}
-                <li><a href="{% url 'profile' %}">Profile</a></li>
-                <li><a href="{% url 'logout' %}">Logout</a></li>
+                <li><a href="{% url 'logout-user' %}">Logout</a></li>
                 {% if user.userprofile.role == 'writer' %}
                     <li><a href="{% url 'new-post' %}">New Post</a></li>
                 {% elif user.userprofile.role == 'editor' %}
                     <li><a href="{% url 'post-approval' %}">Post Approval</a></li>
                 {% endif %}
             {% else %}
-                <li><a href="#" onclick="openAuthModal(); return false;">Login</a></li>
-                <li><a href="#" onclick="openAuthModal(); document.getElementById('show-signup').click(); return false;">Sign Up</a></li>
+                <li><a onclick="openAuthModal()">Sign Up</a></li>
+                <li><a onclick="openAuthModal()">Login</a></li>
             {% endif %}
         </ul>
     </div>
-
-    <!-- Messages display -->
-    {% if messages %}
-        <div class="messages-container">
-            {% for message in messages %}
-                <div class="message {{ message.tags }}">
-                    {{ message }}
-                    <span class="close-message" onclick="this.parentElement.style.display='none';">&times;</span>
-                </div>
-            {% endfor %}
-        </div>
-    {% endif %}
 
     <!-- Auth Modal -->
     <div id="auth-modal" class="modal hidden">
@@ -130,15 +118,13 @@
                     <label for="signup-email">Email:</label>
                     <input type="email" id="signup-email" name="email" required>
                     <label for="first-name">First Name:</label>
-                    <input type="text" id="first-name" name="first_name" required>
+                    <input type="text" id="first-name" name="first-name" required>
                     <label for="last-name">Last Name:</label>
-                    <input type="text" id="last-name" name="last_name" required>
-                    <label for="signup-username">Username:</label>
-                    <input type="text" id="signup-username" name="username" required>
+                    <input type="text" id="last-name" name="last-name" required>
                     <label for="signup-password">Password:</label>
                     <input type="password" id="signup-password" name="password" required>
                     <label for="confirm-password">Confirm Password:</label>
-                    <input type="password" id="confirm-password" name="confirm_password" required>
+                    <input type="password" id="confirm-password" name="confirm-password" required>
                     <button type="submit">Sign Up</button>
                     <p>Already have an account? <a href="#" id="show-login">Login</a></p>
                 </form>
@@ -159,39 +145,34 @@
             </form>
         </div>
     </div>
-
     {% block content %}
     {% endblock %}
     <button class="scroll-to-top" id="scrollToTopBtn">
         <img src="{% static 'images/arrow.png' %}" alt="Scroll to Top">
     </button>
 
-    <div class="ads_content">
-        {% if ads_bottom %}
-        <div class="ad-section ad-bottom">
-            {% for ad in ads_bottom %}
-            <a href="{{ ad.url }}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}"></a>
-        {% endfor %}
-    </div>
-    {% endif %}
-    
-    </div>
     <footer>
         <p>© 2025 NepNews. All rights reserved.</p>
         <ul>
-            <li><a href="/about">About Us</a></li>
-            <li><a href="/contact">Contact</a></li>
-            <li><a href="/privacy-policy">Privacy Policy</a></li>
-            <li><a href="/terms">Terms of Service</a></li>
+            <li><a href="{% url 'about-page' %}">About Us</a></li>
+            <li><a href="{% url 'contact-page' %}">Contact</a></li>
+            <li><a href="{% url 'privacy-policy' %}">Privacy Policy</a></li>
+            <li><a href="{% url 'terms-page' %}">Terms of Service</a></li>
         </ul>
         <div>
             <a href="https://www.facebook.com">Facebook</a>
             <a href="https://www.instagram.com">Instagram</a>
         </div>
         <p>Contact Us: <a href="mailto:contact@nepnews.com">contact@nepnews.com</a></p>
+        {% if ads_bottom %}
+            <div class="ad-section ad-bottom">
+                {% for ad in ads_bottom %}
+                    <a href="{{ ad.url }}"><img src="{{ ad.image.url }}" alt="{{ ad.title }}"></a>
+                {% endfor %}
+            </div>
+        {% endif %}
     </footer>
 
     <script src="{% static 'js/scripts.js' %}"></script>
-    
 </body>
 </html>

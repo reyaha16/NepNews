@@ -54,12 +54,5 @@
     {% else %}
         <p>No bookmarked posts.</p>
     {% endif %}
-
-    <h3>Bookmarked Posts</h3>
-    {% for bookmark in user.bookmark_set.all %}
-        <p><a href="{% url 'view-post' bookmark.post.id %}">{{ bookmark.post.title }}</a></p>
-    {% empty %}
-        <p>No bookmarked posts.</p>
-    {% endfor %}
 </div>
 {% endblock %}

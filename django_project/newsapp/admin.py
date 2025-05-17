@@ -1,6 +1,5 @@
 from django.contrib import admin
-from .models import Category, Post, UserProfile
-from .models import Advertisement
+from .models import Category, Post, UserProfile, Advertisement
 
 class PostAdmin(admin.ModelAdmin):
     list_display = ('title', 'category', 'author', 'status', 'created_at')
@@ -13,11 +12,6 @@ class UserProfileAdmin(admin.ModelAdmin):
     list_display = ('user', 'role')
     list_filter = ('role',)
     search_fields = ('user__username', 'user__email')
-
-admin.site.register(Category)
-admin.site.register(Post, PostAdmin)
-admin.site.register(UserProfile, UserProfileAdmin)
-
 
 @admin.action(description="Approve selected advertisements")
 def approve_ads(modeladmin, request, queryset):
@@ -32,3 +26,7 @@ class AdvertisementAdmin(admin.ModelAdmin):
     list_display = ('title', 'position', 'is_active', 'is_approved', 'created_at')
     list_filter = ('position', 'is_active', 'is_approved')
     actions = [approve_ads, disapprove_ads]
+
+admin.site.register(Category)
+admin.site.register(Post, PostAdmin)
+admin.site.register(UserProfile, UserProfileAdmin)
